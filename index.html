@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator App FreeCodeCamp</title>
+    <link rel="stylesheet" href="../Calculator_Brocode/style.css">
+</head>
+<body>
+    <div class="main">
+        <!-- The Display -->
+        <input class="display" disabled>
+        <!-- The Keys -->
+        <div class="keys">
+            <button class="operator-btn" data-action="add">+</button>
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button class="operator-btn" data-action="subtract">-</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button class="operator-btn" data-action="multiply">&times;</button>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button class="operator-btn" data-action="divide">÷</button>
+            <button>0</button>
+            <button data-action="decimal">.</button>
+            <button class="equal-btn" data-action="calculate">=</button>
+            <button class="clear-btn" data-action="clear">C</button>
+        </div>
+    </div>
+
+    <script>    
+        const calculator = document.querySelector('.main');
+        const keys = calculator.querySelector('.keys');
+        const display = document.querySelector('.display'); 
+
+        // The display value begins with 0.
+        display.value = '0';
+
+        keys.addEventListener('click', e => {
+            // Get the element of clicked button.
+            const key = e.target;
+            // Get the data-action type.
+            const action = key.dataset.action;
+            // Get the value of the button.
+            const keyContent = key.textContent;
+            // Get the present displayed number.
+            const displayedNum = display.value;
+            // Get the data-previousKeyType.    
+            const previousKeyType = calculator.dataset.previousKeyType;
+
+            // Assign Calculate function to variable.
+            const calculate = (n1, operator, n2) => {
+                    let result = '';
+                    // Convert from string to float
+                    if(operator == "add") result = parseFloat(n1) + parseFloat(n2);
+                    if(operator == "subtract") result = parseFloat(n1) - parseFloat(n2);
+                    if(operator == "multiply") result = parseFloat(n1) * parseFloat(n2);
+                    if(operator == "divide") result = parseFloat(n1) / parseFloat(n2);
+
+                    return result;
+                };
+
+            if(e.target.matches("button")) {
+                // Display Number
+                if(!action) {
+                    if(displayedNum == '0' || previousKeyType == "operator") {
+                        display.value = keyContent;
+                    } else {
+                        display.value = displayedNum + keyContent;
+                    }
+                    calculator.dataset.previousKeyType = "number";
+                }
+                // Display Decimal
+                if(action == "decimal") {
+                    display.value = displayedNum + '.';
+                }
+                // Display Operator
+                if(action == "add" || action == "subtract" || action == "multiply" || action == "divide") {
+                    /* Animation css for Operator Button
+                    // key.parentNode = div<class="key"> => key.parentNode.children = <button> */
+                    Array.from(key.parentNode.children).forEach(k => k.classList.remove('is-depressed'));
+                    key.classList.add('is-depressed');
+                    
+                    /* Just notice that this is an Operator
+                    // Add custom attribute: <div class="calculator" data-previous-key-type="operator"> */
+                    calculator.dataset.previousKeyType = "operator";
+
+                    // Store the firstValue before click Operator Button
+                    calculator.dataset.firstValue = displayedNum;
+                    // Store the Operator's action 
+                    calculator.dataset.operator = action;
+                }
+
+                // Display Result
+                if(action == "calculate") {
+                    const firstValue = calculator.dataset.firstValue;
+                    const operator = calculator.dataset.operator;
+                    const secondValue = displayedNum;
+                    
+                    display.value = calculate(firstValue, operator, secondValue);
+                }
+            }
+        });
+
+
+    </script>
+</body>
