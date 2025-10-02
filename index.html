@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator App FreeCodeCamp</title>
-    <link rel="stylesheet" href="../Calculator_Brocode/style.css">
+    <link rel="stylesheet" href="../Calculator_FreeCodeCamp/style.css">
 </head>
 <body>
     <div class="main">
@@ -74,16 +74,29 @@
                     }
                     calculator.dataset.previousKeyType = "number";
                 }
-                // Display Decimal
-                if(action == "decimal") {
+                // Display Decimal && Edge case: When we hit the decimal key continously.
+                if(action == "decimal" && !displayedNum.includes('.')) {
                     display.value = displayedNum + '.';
+                    if(calculator.dataset.previousKeyType == "operator") {
+                        display.value = '0.'
+                    }
+                    calculator.dataset.previousKeyType = "decimal";
                 }
                 // Display Operator
-                if(action == "add" || action == "subtract" || action == "multiply" || action == "divide") {
+                if(action == "add" || action == "subtract" || action == "multiply" || action == "divide" || action == "clear") {
                     /* Animation css for Operator Button
                     // key.parentNode = div<class="key"> => key.parentNode.children = <button> */
                     Array.from(key.parentNode.children).forEach(k => k.classList.remove('is-depressed'));
                     key.classList.add('is-depressed');
+
+                    // Edge Case when click an Operator after secondValue.
+                    const firstValue = calculator.dataset.firstValue;
+                    const operator = calculator.dataset.operator;
+                    const secondValue = displayedNum;
+                    if (firstValue && operator) {
+                        display.value = calculate(firstValue, operator, secondValue);
+                    }
+
                     
                     /* Just notice that this is an Operator
                     // Add custom attribute: <div class="calculator" data-previous-key-type="operator"> */
@@ -93,6 +106,12 @@
                     calculator.dataset.firstValue = displayedNum;
                     // Store the Operator's action 
                     calculator.dataset.operator = action;
+                }
+
+                // Clear Button
+                if (action == 'clear') {
+                    display.value = '0';
+                    calculator.dataset.previousKeyType = 'clear'
                 }
 
                 // Display Result
@@ -105,7 +124,5 @@
                 }
             }
         });
-
-
     </script>
 </body>
