@@ -9,9 +9,9 @@ _ Display result immediately when pressing =
 
 _ Handle special cases:
 
-  Do not allow multiple decimal points to be entered consecutively
+    Do not allow multiple decimal points to be entered consecutively
   
-  Handle number input string after pressing operator
+    Handle number input string after pressing operator
 
 _ Clear button to reset display to 0
 
