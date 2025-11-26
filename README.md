@@ -2,6 +2,7 @@
 
 # Reason and Target for this project:
 _ Learning basic JavaScript (Operator, DOM manipulation, dataset attributes)
+
 _ Practice basic HTML, CSS
 
 # Functions:
